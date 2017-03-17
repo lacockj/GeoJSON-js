@@ -155,7 +155,7 @@ GeoJSON.FeatureCollection = function( o ) {
    * @param {GeoJSON.Feature} feature
    */
   fc.addFeature = function( feature ) {
-    fc.features.push( feature );
+    fc.features.push( new GeoJSON.Feature( feature ) );
     return fc;
   }
 
