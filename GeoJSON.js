@@ -106,10 +106,17 @@ GeoJSON.Geometry = function( o ) {
     }
     return g._bbox;
   }
-
   Object.defineProperty( g, 'bbox', {
     get: function() { return g._calc_bbox(); }
   });
+
+  // Custom JSON Stringification //
+  g.toJSON = function(){
+    return {
+      type:        g.type,
+      coordinates: g.coordinates
+    }
+  }
 
   return g;
 }
@@ -126,8 +133,19 @@ GeoJSON.Feature = function( o ) {
   var f = {};
   f.type = "Feature";
   f.geometry = new GeoJSON.Geometry( o.geometry );
-  f.bbox = f.geometry.bbox;
   f.properties = o.properties || {};
+  f.bbox = f.geometry.bbox;
+
+  // Custom JSON Stringification //
+  f.toJSON = function(){
+    return {
+      type:       f.type,
+      geometry:   f.geometry,
+      properties: f.properties,
+      bbox:       f.bbox
+    }
+  }
+
   return f;
 }
 
@@ -156,6 +174,7 @@ GeoJSON.FeatureCollection = function( o ) {
    */
   fc.addFeature = function( feature ) {
     fc.features.push( new GeoJSON.Feature( feature ) );
+    fc._bbox = null;
     return fc;
   }
 
@@ -209,14 +228,24 @@ GeoJSON.FeatureCollection = function( o ) {
       for ( f in fc.features ) {
         bb.merge( fc.features[f].bbox );
       }
+      console.log( bb );
       fc._bbox = bb.toArray();
     }
     return fc._bbox;
   }
-
   Object.defineProperty( fc, 'bbox', {
     get: function() { return fc._calc_bbox(); }
   });
+
+  // Custom JSON Stringification //
+  fc.toJSON = function(){
+    return {
+      type:       fc.type,
+      features:   fc.features,
+      properties: fc.properties,
+      bbox:       fc.bbox
+    }
+  }
 
   return fc;
 }
