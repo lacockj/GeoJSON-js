@@ -102,7 +102,7 @@ GeoJSON.Geometry = function( o ) {
     if ( recalc || g._bbox === null ) {
       bb = new GeoJSON.Bbox();
       bb.expand( g.coordinates );
-      g._bbox = bb.toArray();
+      g._bbox = bb.toJSON();
     }
     return g._bbox;
   }
@@ -228,8 +228,7 @@ GeoJSON.FeatureCollection = function( o ) {
       for ( f in fc.features ) {
         bb.merge( fc.features[f].bbox );
       }
-      console.log( bb );
-      fc._bbox = bb.toArray();
+      fc._bbox = bb.toJSON();
     }
     return fc._bbox;
   }
@@ -329,7 +328,7 @@ GeoJSON.Bbox = function( corners ) {
     return bb;
   }
 
-  bb.toArray = function(){
+  bb.toJSON = function(){
     return bb.min.concat( bb.max );
   }
 

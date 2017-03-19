@@ -52,10 +52,22 @@ var example2 = {
   ]
 }
 
-var myFeatureCollection = new GeoJSON.FeatureCollection( example2 );
+var myBases = new GeoJSON.FeatureCollection( example2 );
 
-console.log( myFeatureCollection.bbox ); //  [40,10,50,50]
-console.log( myFeatureCollection.getFeatureByPropertyValue( "id", 2 ).properties.label ); //  "Second Base"
+console.log( myBases.getFeatureByPropertyValue( "id", 2 ).properties.label ); //  "Second Base"
+console.log( myBases.bbox ); //  [40,10,50,50]
+myBases.addFeature({
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates":[0,40]
+  },
+  "properties": {
+    "id": 3,
+    "label": "Third Base"
+  }
+});
+console.log( myBases.bbox ); // [0,10,50,50]
 ```
 
 ## Installation
@@ -103,10 +115,11 @@ var southernmostLatitude = f.bbox[0];
 #### Converting to JSON string:
 
 Class methods and housekeeping properties are automatically stripped out by the
-special `toJSON` method when using JavaScript's built-in `JSON.stringify()`.
+`toJSON()` method and when using `JSON.stringify( myObj )`.
 
 ```js
-var jsonString = JSON.stringify( f );
+var jsonString = JSON.stringify( myFeatureClassObject );
+var plainObject = myFeatureClassObject.toJSON();
 ```
 
 ### FeatureCollection
@@ -189,5 +202,5 @@ bboxObject.merge( otherBboxObject );
 #### Getting Back the Bbox Array
 
 ```js
-var bboxArray = bboxObject.toArray();
+var bboxArray = bboxObject.toJSON();
 ```
